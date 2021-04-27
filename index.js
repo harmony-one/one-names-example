@@ -12,8 +12,7 @@ const NODE_URL = "https://api.s0.b.hmny.io";
 const DOMAIN_NAME = "crazy";
 
 const ETH_GAS_LIMIT = 6721900;
-const HMY_USER_PRIVATE_KEY =
-  "07b50f1095a5c3c1b08639b021f2b456d1f82e4bdd14310410dffb5f1277fe1b";
+const HMY_USER_PRIVATE_KEY = "XXX";
 
 const web3 = new Web3(NODE_URL);
 // or init with Metamask / OneWallet
