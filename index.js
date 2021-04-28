@@ -140,3 +140,42 @@ const test = async () => {
 };
 
 test();
+
+const getLogs = async (txHash) => {
+  const receipt = await web3.eth.getTransactionReceipt(txHash);
+
+  receipt.logs.forEach((log) => {
+    try {
+      const decoded = web3.eth.abi.decodeLog(
+        [
+          {
+            indexed: true,
+            name: "label",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            name: "subdomain",
+            type: "string",
+          },
+          {
+            indexed: true,
+            name: "owner",
+            type: "address",
+          },
+          {
+            indexed: false,
+            name: "price",
+            type: "uint256",
+          },
+        ],
+        log.data,
+        log.topics.slice(1)
+      );
+
+      console.log(decoded);
+    } catch (e) {}
+  });
+};
+
+getLogs("0x9af094f433bd6eea580e8a2dd810b12833b46a9f77a9002c101741722bc3a2e2");
