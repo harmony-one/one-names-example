@@ -144,7 +144,7 @@ test();
 const getLogs = async (txHash) => {
   const receipt = await web3.eth.getTransactionReceipt(txHash);
 
-  receipt.logs.forEach((log) => {
+  receipt.logs.forEach(async (log) => {
     try {
       const decoded = web3.eth.abi.decodeLog(
         [
@@ -174,6 +174,21 @@ const getLogs = async (txHash) => {
       );
 
       console.log(decoded);
+
+      // 1 - check domain:
+      console.log(
+        "Check domain: ",
+        sha3("crazy"),
+        decoded.label === sha3("crazy")
+      );
+
+      // 2 - check contract:
+      const subdomainRegisterAddress = await ens.name("crazy.one").getAddress();
+      console.log(
+        "Check contract: ",
+        receipt.to.toLowerCase() ===
+          subdomainRegisterAddress.toString().toLowerCase()
+      );
     } catch (e) {}
   });
 };
