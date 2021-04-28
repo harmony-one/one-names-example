@@ -2,11 +2,11 @@ const ENS = require("@ensdomains/ensjs").default;
 const Web3 = require("web3");
 const sha3 = require("web3-utils").sha3;
 const utils = require("web3-utils");
+const { hash } = require("eth-ens-namehash");
 const BN = require("bn.js");
 const EthRegistrarSubdomainRegistrar = require("./contracts/EthRegistrarSubdomainRegistrar");
 
-const ENS_ADDRESS = "0x84e2459Bf48ed4B57014F5E6c6a76B845d44F278";
-const REFERRER_ADDRESS = "0xFbE0741bC1B52dD723A6bfA145E0a15803AC9581";
+const ENS_ADDRESS = "0xB750e4B49cf1b5162F7EfC964B3df5E9bfC893AD";
 const NODE_URL = "https://api.s0.b.hmny.io";
 
 const DOMAIN_NAME = "crazy";
@@ -35,6 +35,8 @@ const test = async () => {
 
   const subdomainRegisterAddress = await ens.name("crazy.one").getAddress();
 
+  const REFERRER_ADDRESS = await ens.name("crazy.one").getAddress();
+
   console.log(
     "subdomainRegisterAddress (crazy.one): ",
     subdomainRegisterAddress
@@ -48,7 +50,7 @@ const test = async () => {
     subdomainRegisterAddress
   );
 
-  const subdomain = "test-123456789112";
+  const subdomain = "test-12345678913";
   const duration = 31536000; // 1 year
 
   //check subdomain to free
@@ -90,7 +92,7 @@ const test = async () => {
       subdomain,
       hmyUserAccount,
       duration,
-      REFERRER_ADDRESS,
+      "twitter Name 12345",
       resolverAddress
     )
     .send({
@@ -100,7 +102,7 @@ const test = async () => {
       gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1)),
     });
 
-  console.log("TX STATUS: ", tx.status);
+  console.log("TX STATUS: ", tx.status, tx.transactionHash);
 
   console.log("");
   console.log("-------------- CHECK SUBDOMAIN INFO ----------");
@@ -108,12 +110,23 @@ const test = async () => {
 
   subdomainAddress = await ens.name(subdomain + ".crazy.one").getAddress();
   console.log(
-    `Address: ${subdomain}.crazy.one`, subdomainAddress, subdomainAddress === hmyUserAccount
+    `Address: ${subdomain}.crazy.one`,
+    subdomainAddress,
+    subdomainAddress === hmyUserAccount
   );
 
   const subdomainOwner = await ens.name(subdomain + ".crazy.one").getOwner();
   console.log(
-    `Owner: ${subdomain}.crazy.one`, subdomainOwner, subdomainOwner === hmyUserAccount
+    `Owner: ${subdomain}.crazy.one`,
+    subdomainOwner,
+    subdomainOwner === hmyUserAccount
+  );
+
+  console.log(
+    "Twitter name: ",
+    await subdomainRegistrar.methods
+      .twitter(hash(`${subdomain}.crazy.one`))
+      .call()
   );
 
   console.log(
