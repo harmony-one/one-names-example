@@ -35,8 +35,6 @@ const test = async () => {
 
   const subdomainRegisterAddress = await ens.name("crazy.one").getAddress();
 
-  const REFERRER_ADDRESS = await ens.name("crazy.one").getAddress();
-
   console.log(
     "subdomainRegisterAddress (crazy.one): ",
     subdomainRegisterAddress
@@ -50,7 +48,9 @@ const test = async () => {
     subdomainRegisterAddress
   );
 
-  const subdomain = "test-12345678913";
+  const REFERRER_ADDRESS = await subdomainRegistrar.methods.owner(sha3('crazy')).call();
+
+  const subdomain = "tes1-1234567";
   const duration = 31536000; // 1 year
 
   //check subdomain to free
@@ -103,6 +103,8 @@ const test = async () => {
     });
 
   console.log("TX STATUS: ", tx.status, tx.transactionHash);
+
+  await getLogs(tx.transactionHash);
 
   console.log("");
   console.log("-------------- CHECK SUBDOMAIN INFO ----------");
@@ -193,4 +195,4 @@ const getLogs = async (txHash) => {
   });
 };
 
-getLogs("0x9af094f433bd6eea580e8a2dd810b12833b46a9f77a9002c101741722bc3a2e2");
+// getLogs("0x9af094f433bd6eea580e8a2dd810b12833b46a9f77a9002c101741722bc3a2e2");
