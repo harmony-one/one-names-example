@@ -6,7 +6,7 @@ const { hash } = require("eth-ens-namehash");
 const BN = require("bn.js");
 const EthRegistrarSubdomainRegistrar = require("./contracts/EthRegistrarSubdomainRegistrar");
 
-const ENS_ADDRESS = "0x56F89baC393f0d4CF17f43135E178F16AA844D86";
+const ENS_ADDRESS = "0xaE7FFb8E6e38d80e4d032f53FA9A271764C2FDad";
 const NODE_URL = "https://api.s0.t.hmny.io";
 
 const DOMAIN_NAME = "crazy";
@@ -48,18 +48,21 @@ const test = async () => {
     subdomainRegisterAddress
   );
 
-  const REFERRER_ADDRESS = await subdomainRegistrar.methods.referralAddress('crazy').call();
+  const REFERRER_ADDRESS = await subdomainRegistrar.methods
+    .referralAddress("crazy")
+    .call();
 
   const subdomain = "tes1-1234567";
   const duration = 31536000; // 1 year
 
   //check subdomain to free
-  let subdomainAddress = await ens.name(subdomain + ".crazy.one").getAddress();
+  let available = await subdomainRegistrar.methods
+    .available(hash(`${subdomain}.crazy.one`))
+    .call();
 
-  console.log("Check address to free: ", Number(subdomainAddress) === 0);
+  console.log("available", available);
 
-  // if 0x0 then free
-  if (Number(subdomainAddress) !== 0) {
+  if (!available) {
     return;
   }
 
@@ -129,6 +132,17 @@ const test = async () => {
     await subdomainRegistrar.methods
       .twitter(hash(`${subdomain}.crazy.one`))
       .call()
+  );
+
+  console.log(
+    "date Expires",
+    new Date(
+      Number(
+        await subdomainRegistrar.methods
+          .nameExpires(hash(`${subdomain}.crazy.one`))
+          .call()
+      ) * 1000
+    )
   );
 
   console.log(

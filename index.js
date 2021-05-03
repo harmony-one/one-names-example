@@ -6,7 +6,7 @@ const { hash } = require("eth-ens-namehash");
 const BN = require("bn.js");
 const EthRegistrarSubdomainRegistrar = require("./contracts/EthRegistrarSubdomainRegistrar");
 
-const ENS_ADDRESS = "0x1F18024d5E1D6Cd1E456E3a46da76982F451B5b3";
+const ENS_ADDRESS = "0xd8532Db4d846424Bc1D0D9b08AB45EEf31b6c00F";
 const NODE_URL = "https://api.s0.b.hmny.io";
 
 const DOMAIN_NAME = "crazy";
@@ -48,18 +48,21 @@ const test = async () => {
     subdomainRegisterAddress
   );
 
-  const REFERRER_ADDRESS = await subdomainRegistrar.methods.referralAddress('crazy').call();
+  const REFERRER_ADDRESS = await subdomainRegistrar.methods
+    .referralAddress("crazy")
+    .call();
 
   const subdomain = "tes1-1234567";
   const duration = 31536000; // 1 year
 
   //check subdomain to free
-  let subdomainAddress = await ens.name(subdomain + ".crazy.one").getAddress();
+  let available = await subdomainRegistrar.methods
+    .available(hash(`${subdomain}.crazy.one`))
+    .call();
 
-  console.log("Check address to free: ", Number(subdomainAddress) === 0);
+  console.log("available", available);
 
-  // if 0x0 then free
-  if (Number(subdomainAddress) !== 0) {
+  if (!available) {
     return;
   }
 
@@ -138,6 +141,17 @@ const test = async () => {
   console.log(
     "Referrer balance after: ",
     (await web3.eth.getBalance(REFERRER_ADDRESS)) / 1e18
+  );
+
+  console.log(
+    "date Expires",
+    new Date(
+      Number(
+        await subdomainRegistrar.methods
+          .nameExpires(hash(`${subdomain}.crazy.one`))
+          .call()
+      ) * 1000
+    )
   );
 };
 
