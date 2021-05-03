@@ -6,7 +6,7 @@ const { hash } = require("eth-ens-namehash");
 const BN = require("bn.js");
 const EthRegistrarSubdomainRegistrar = require("./contracts/EthRegistrarSubdomainRegistrar");
 
-const ENS_ADDRESS = "0xB750e4B49cf1b5162F7EfC964B3df5E9bfC893AD";
+const ENS_ADDRESS = "0x1F18024d5E1D6Cd1E456E3a46da76982F451B5b3";
 const NODE_URL = "https://api.s0.b.hmny.io";
 
 const DOMAIN_NAME = "crazy";
@@ -48,7 +48,7 @@ const test = async () => {
     subdomainRegisterAddress
   );
 
-  const REFERRER_ADDRESS = await subdomainRegistrar.methods.owner(sha3('crazy')).call();
+  const REFERRER_ADDRESS = await subdomainRegistrar.methods.referralAddress('crazy').call();
 
   const subdomain = "tes1-1234567";
   const duration = 31536000; // 1 year
