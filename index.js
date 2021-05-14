@@ -109,6 +109,14 @@ const test = async () => {
 
   await getLogs(tx.transactionHash);
 
+  const res = await subdomainRegistrar.methods
+    ._setTwitterURI(hash(`${subdomain}.crazy.one`), "new_twitter_name")
+    .send({
+      from: hmyUserAccount,
+      gas: ETH_GAS_LIMIT,
+      gasPrice: new BN(await web3.eth.getGasPrice()).mul(new BN(1)),
+    });
+
   console.log("");
   console.log("-------------- CHECK SUBDOMAIN INFO ----------");
   console.log("");
