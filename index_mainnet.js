@@ -6,7 +6,7 @@ const { hash } = require("eth-ens-namehash");
 const BN = require("bn.js");
 const EthRegistrarSubdomainRegistrar = require("./contracts/EthRegistrarSubdomainRegistrar");
 
-const ENS_ADDRESS = "0xaE7FFb8E6e38d80e4d032f53FA9A271764C2FDad";
+const ENS_ADDRESS = "0x3fa4135B88cE1035Fed373F0801118a3340B37e7";
 const NODE_URL = "https://api.s0.t.hmny.io";
 
 const DOMAIN_NAME = "crazy";
